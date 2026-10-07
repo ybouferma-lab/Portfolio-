@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Younes Bouferma — Portfolio</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#faf8f4;--fg:#1c1b19;--mut:#6b675f;--card:#fff;--line:#e6e1d8;--acc:#0f6b5c;--acc2:#e8f3f0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151513;--fg:#f1eee8;--mut:#a29d92;--card:#1f1e1b;--line:#33312c;--acc:#5fc4af;--acc2:#1d2d29}}
+:root[data-theme="dark"]{--bg:#151513;--fg:#f1eee8;--mut:#a29d92;--card:#1f1e1b;--line:#33312c;--acc:#5fc4af;--acc2:#1d2d29}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Georgia,"Times New Roman",serif;line-height:1.6}
+.w{max-width:1000px;margin:0 auto;padding:0 20px}
+h1,h2,h3,button,.chip,.meta{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:64px 0 32px}
+.kick{color:var(--acc);font:600 .8rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{font-size:clamp(2rem,6vw,3.4rem);line-height:1.1;margin:.3em 0}
+.lead{font-size:1.15rem;color:var(--mut);max-width:640px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:6px 14px;border-radius:99px;cursor:pointer;font-size:.9rem}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-size:1.1rem}
+.meta{color:var(--mut);font-size:.8rem}
+.card p{margin:0;font-size:.95rem;flex:1}
+.tag{display:inline-block;background:var(--acc2);color:var(--acc);font:600 .7rem system-ui,sans-serif;padding:2px 8px;border-radius:6px;margin-right:4px}
+.btn{align-self:flex-start;background:var(--acc);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.9rem}
+.btn.ghost{background:none;color:var(--acc);border:1px solid var(--acc)}
+section{padding:48px 0}
+h2{font-size:1.5rem;margin:0 0 16px}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mut);font:.85rem system-ui,sans-serif}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+#modal.open{display:flex}
+.box{background:var(--card);border-radius:12px;width:min(1000px,100%);height:min(86vh,720px);display:flex;flex-direction:column;overflow:hidden}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-family:system-ui,sans-serif}
+.bar strong{flex:1;font-size:.95rem}
+#track{font-size:.8rem;color:var(--acc);padding:6px 14px;background:var(--acc2);font-family:system-ui,sans-serif}
+#frame{flex:1;border:0;width:100%;background:#fff}
+#empty{padding:24px;font-family:system-ui,sans-serif;color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="w">
+<header>
+  <div class="kick">Portfolio · Instructional Design</div>
+  <h1>Younes Bouferma</h1>
+  <p class="lead">Concepteur pédagogique senior, 13+ ans d'expérience dans la conception de solutions d'apprentissage numériques pour des organisations internationales (UNICEF, UNHCR, UNITAR). Découvrez mes réalisations — les modules SCORM sont jouables directement ici.</p>
+</header>
+
+<section style="padding-top:0">
+  <h2>Réalisations</h2>
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section>
+  <h2>Contact</h2>
+  <p>Envie d'échanger sur un projet de formation ? <a style="color:var(--acc)" href="mailto:votre@email.com">votre@email.com</a> · <a style="color:var(--acc)" href="#">LinkedIn</a></p>
+</section>
+</div>
+<footer><div class="w">© <span id="y"></span> Younes Bouferma</div></footer>
+
+<div id="modal" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="bar"><strong id="mt"></strong><button class="btn ghost" id="fs">Plein écran</button><button class="btn" id="cl">Fermer</button></div>
+    <div id="track"></div>
+    <iframe id="frame" title="Module" allow="fullscreen"></iframe>
+    <div id="empty" hidden></div>
+  </div>
+</div>
+
+<script>
+// ✏️ MODIFIEZ CETTE LISTE : une entrée par réalisation.
+// type: "SCORM" | "Simulation" | "Vidéo" | "Autre"
+// url : lien vers le module SCORM décompressé (index.html / story.html) hébergé en ligne. Laisser "" si aucun.
+const PROJECTS=[
+ {title:"Démo : module SCORM interactif",org:"Exemple intégré",year:2026,type:"SCORM",tags:["SCORM 2004","Quiz"],desc:"Mini-module de démonstration : cliquez sur « Terminer » et observez le suivi (statut, score) remonter dans la barre au-dessus du module.",demo:true},
+ {title:"Eldria — simulation d'épidémie (RCCE)",org:"Formation humanitaire",year:2026,type:"Simulation",tags:["RCCE","Ebola fictif"],desc:"Simulation d'une épidémie fictive pour la formation de professionnels de l'humanitaire.",url:""},
+ {title:"Votre module SCORM n°1",org:"Organisation",year:2025,type:"SCORM",tags:["Articulate","Rise"],desc:"Ajoutez ici la description, le contexte, votre rôle et les résultats obtenus.",url:""},
+ {title:"Votre vidéo pédagogique",org:"Organisation",year:2024,type:"Vidéo",tags:["Motion design"],desc:"Remplacez par une de vos réalisations.",url:""}
+];
+
+const $=id=>document.getElementById(id);
+$('y').textContent=new Date().getFullYear();
+let filter="Tous";
+function render(){
+  const types=["Tous",...new Set(PROJECTS.map(p=>p.type))];
+  $('chips').innerHTML=types.map(t=>`<button class="chip ${t===filter?'on':''}" data-t="${t}">${t}</button>`).join('');
+  $('grid').innerHTML=PROJECTS.map((p,i)=>({p,i})).filter(o=>filter==="Tous"||o.p.type===filter).map(({p,i})=>`
+   <article class="card"><div class="meta">${p.org} · ${p.year}</div><h3>${p.title}</h3>
+   <p>${p.desc}</p><div>${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+   <button class="btn" data-i="${i}">${p.type==="SCORM"?"Lancer le module":"Voir"}</button></article>`).join('');
+}
+$('chips').onclick=e=>{if(e.target.dataset.t){filter=e.target.dataset.t;render()}};
+$('grid').onclick=e=>{if(e.target.dataset.i!==undefined)openP(PROJECTS[+e.target.dataset.i])};
+
+/* ---- Mini runtime SCORM 1.2 + 2004 (le contenu trouve l'API dans window.parent) ---- */
+let cmi={};
+function upd(){
+  const s=cmi['cmi.core.lesson_status']||cmi['cmi.completion_status']||'—';
+  const sc=cmi['cmi.core.score.raw']||cmi['cmi.score.raw']||'—';
+  $('track').textContent='Suivi SCORM → statut : '+s+' · score : '+sc;
+}
+const ok=()=> 'true', zero=()=> '0', empty=()=> '';
+const get=k=>cmi[k]||'', set=(k,v)=>{cmi[k]=v;upd();return 'true'};
+window.API={LMSInitialize:ok,LMSFinish:ok,LMSGetValue:get,LMSSetValue:set,LMSCommit:ok,LMSGetLastError:zero,LMSGetErrorString:empty,LMSGetDiagnostic:empty};
+window.API_1484_11={Initialize:ok,Terminate:ok,GetValue:get,SetValue:set,Commit:ok,GetLastError:zero,GetErrorString:empty,GetDiagnostic:empty};
+
+const DEMO=`<body style="font-family:system-ui,sans-serif;padding:32px;max-width:560px;margin:auto">
+<h2>Question 1</h2><p>Quel standard permet à un module e-learning de communiquer avec un LMS ?</p>
+<label><input type="radio" name="q" value="1"> SCORM</label><br><label><input type="radio" name="q" value="0"> JPEG</label><br><br>
+<button id="b" style="padding:8px 16px">Terminer</button><p id="r"></p>
+<script>
+var A=window.parent.API_1484_11;A.Initialize('');
+document.getElementById('b').onclick=function(){
+ var v=document.querySelector('input:checked');var s=v&&v.value==='1'?100:0;
+ A.SetValue('cmi.score.raw',String(s));A.SetValue('cmi.completion_status','completed');
+ A.SetValue('cmi.success_status',s>=80?'passed':'failed');A.Commit('');
+ document.getElementById('r').textContent=s?'Bravo !':'Essayez encore.';};
+<\/script></body>`;
+
+function openP(p){
+  cmi={};$('mt').textContent=p.title;
+  const f=$('frame'),e=$('empty');f.removeAttribute('src');f.removeAttribute('srcdoc');
+  $('track').hidden=p.type!=="SCORM";upd();
+  if(p.demo){f.hidden=true;f.hidden=false;e.hidden=true;f.srcdoc=DEMO;}
+  else if(p.url){f.hidden=false;e.hidden=true;f.src=p.url;}
+  else{f.hidden=true;e.hidden=false;e.textContent="Aucun lien n'est encore renseigné pour cette réalisation. Ajoutez l'URL du module dans la liste PROJECTS.";}
+  $('modal').classList.add('open');
+}
+function closeP(){$('modal').classList.remove('open');$('frame').removeAttribute('src');$('frame').removeAttribute('srcdoc')}
+$('cl').onclick=closeP;
+$('fs').onclick=()=>{const f=$('frame');(f.requestFullscreen||f.webkitRequestFullscreen||function(){}).call(f)};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeP()});
+render();
+</script>
+</body>
+</html>
